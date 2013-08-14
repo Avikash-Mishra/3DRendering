@@ -19,6 +19,7 @@ public class GUI {
 	Graphics g;
 	public static void main(String[] arg){
 		new GUI();
+
 	}
 	public GUI(){
 		setupFrame();
@@ -43,11 +44,11 @@ public class GUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
 				System.exit(1);
 			}
 		});
 		Drawing.setSize(FrameWidth,FrameHeight);
-		
 		WindowFrame.add(Drawing);
 		WindowFrame.add(TopPanel, BorderLayout.NORTH);
 		

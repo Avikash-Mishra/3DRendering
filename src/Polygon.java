@@ -12,6 +12,8 @@ public class Polygon {
 	private int Green;
 	private int Blue;
 	private Color color;
+	private Transform transform;
+	private float[][] matrix;
 
 	/**
 	 * @param vector3d1
@@ -33,14 +35,71 @@ public class Polygon {
 		Green = green;
 		Blue = blue;
 		this.color = new Color(red,green,blue);
+		centre();
+		rotateY(-.5f);
 	}
 	
-	public void rotateY(){
+
+
+	public void rotateY(float radians){
+		transform = Transform.newYRotation(radians);
+		vector3DA = transform.multiply(vector3DA);
+		vector3DB = transform.multiply(vector3DB);
+		vector3DC = transform.multiply(vector3DC);
+		
+	}
+	
+	public void rotateX(float radians){
+		transform = Transform.newXRotation(radians);
+		vector3DA = transform.multiply(vector3DA);
+		vector3DB = transform.multiply(vector3DB);
+		vector3DC = transform.multiply(vector3DC);
+		
+	}
+	
+	public void rotateZ(float radians){
+		transform = Transform.newZRotation(radians);
+		vector3DA = transform.multiply(vector3DA);
+		vector3DB = transform.multiply(vector3DB);
+		vector3DC = transform.multiply(vector3DC);
+		
+	}
+	
+	public void translate(double x,double y, double z){
+		vector3DA.x += x;
+		vector3DA.y += y;
+		vector3DA.z += z;
+		
+		vector3DB.x += x;
+		vector3DB.y += y;
+		vector3DB.z += z;
+		
+		vector3DC.x += x;
+		vector3DC.y += y;
+		vector3DC.z += z;
+	}
+	
+	public void centre(){
+		int width = 800;
+		int height = 800;
+		
+		vector3DA.x += width/4;
+		vector3DA.y += height/4;
+		
+		vector3DB.x += width/4;
+		vector3DB.y += height/4;
+		
+		vector3DC.x += width/4;
+		vector3DC.y += height/4;
 		
 	}
 	public void draw(Graphics g){
 		g.setColor(color);
-		
+		java.awt.Polygon p = new java.awt.Polygon();
+		p.addPoint((int)vector3DA.x,(int)vector3DA.y);
+		p.addPoint((int)vector3DB.x,(int)vector3DB.y);
+		p.addPoint((int)vector3DC.x,(int)vector3DC.y);
+		g.fillPolygon(p);
 		
 	}
 	/**

@@ -8,10 +8,10 @@
  *  are final and cannot be modified
  */
 public class Vector3D{
-    public final float x;
-    public final float y;
-    public final float z;
-    public final float mag;
+    public float x;
+    public float y;
+    public float z;
+    public float mag;
 
     /** Construct a new vector, with the specified x, y, z components
      *  computes and caches the magnitude. */ 

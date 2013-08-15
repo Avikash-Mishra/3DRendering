@@ -15,7 +15,7 @@ public class Transform{
     private final float[][] values;
 
     /** Construct a Transformation given 3x4 array of elements */
-    private Transform(float[][] v){
+    Transform(float[][] v){
         if (v.length != 3 || v[0].length!=4)
             throw new IllegalArgumentException("Transform: Wrong size array for argument: "+v);
         else
@@ -48,8 +48,8 @@ public class Transform{
     /** Construct a scaling Transformation given sx, sy, sz */
     public static Transform newScale(float sx, float sy, float sz){
         return new Transform(new float[][]{{sx,  0.0f, 0.0f, 0.0f},
-					   {0.0f, sy,  0.0f, 0.0f},
-					   {0.0f, 0.0f, sz,  0.0f}});
+					   						{0.0f, sy,  0.0f, 0.0f},
+					   						{0.0f, 0.0f, sz,  0.0f}});
     }
 
     /** Construct a rotation Transformation given angle around x axis */

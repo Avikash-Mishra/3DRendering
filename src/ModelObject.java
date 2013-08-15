@@ -33,4 +33,8 @@ public class ModelObject {
 		}
 	}
 	
+	public void rotateY(float radian){
+		
+	}
+	
 }

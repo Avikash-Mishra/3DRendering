@@ -3,18 +3,12 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 public class Main {
-	private File file;
-	
+	GUI gui;
 	public Main() {
-		loadData();
+		gui = new GUI();
 	}
 
-	private void loadData() {
-		JFileChooser openFile = new JFileChooser();
-		openFile.showOpenDialog(null);
-		File folder = new File(openFile.getSelectedFile().toString());
-		this.file = folder;
-	}
+	
 	
 	
 

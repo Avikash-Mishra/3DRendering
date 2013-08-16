@@ -3,6 +3,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ import javax.swing.JPanel;
 
 public class GUI {
 	private JFrame WindowFrame;
-	private JComponent Drawing;
+	private JComponent drawing;
 	private JPanel TopPanel;
 	private int FrameWidth = 800;
 	private int FrameHeight = 800;
@@ -36,7 +39,7 @@ public class GUI {
 		WindowFrame.setSize(FrameWidth, FrameHeight);
 		WindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		WindowFrame.setResizable(true);
-		Drawing = new JPanel() {
+		drawing = new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				draw(g);
@@ -59,8 +62,40 @@ public class GUI {
 
 			}
 		});
-		Drawing.setSize(FrameWidth, FrameHeight);
-		WindowFrame.add(Drawing);
+		
+		drawing.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				main.mouseReleased(arg0);
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				main.mousePressed(arg0);
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {}
+		});
+		drawing.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {}
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				main.mouseDragged(arg0);
+			}
+		});
+		drawing.setSize(FrameWidth, FrameHeight);
+		WindowFrame.add(drawing);
 		WindowFrame.add(TopPanel, BorderLayout.NORTH);
 
 		WindowFrame.setVisible(true);
@@ -74,6 +109,6 @@ public class GUI {
 			}
 			
 		}
-		Drawing.repaint();
+		drawing.repaint();
 	}
 }

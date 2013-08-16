@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 
 
@@ -35,8 +36,7 @@ public class Polygon {
 		Green = green;
 		Blue = blue;
 		this.color = new Color(red,green,blue);
-		centre();
-		rotateY(-.5f);
+		//rotateY(-.5f);
 	}
 	
 
@@ -65,7 +65,7 @@ public class Polygon {
 		
 	}
 	
-	public void translate(double x,double y, double z){
+	public void translate(float x,float y, float z){
 		vector3DA.x += x;
 		vector3DA.y += y;
 		vector3DA.z += z;
@@ -79,20 +79,14 @@ public class Polygon {
 		vector3DC.z += z;
 	}
 	
-	public void centre(){
-		int width = 800;
-		int height = 800;
-		
-		vector3DA.x += width/4;
-		vector3DA.y += height/4;
-		
-		vector3DB.x += width/4;
-		vector3DB.y += height/4;
-		
-		vector3DC.x += width/4;
-		vector3DC.y += height/4;
-		
+	public ArrayList<Vector3D> getVectors(){
+		ArrayList<Vector3D> toReturn = new ArrayList<Vector3D>();
+		toReturn.add(vector3DA);
+		toReturn.add(vector3DB);
+		toReturn.add(vector3DC);
+		return toReturn;
 	}
+	
 	public void draw(Graphics g){
 		g.setColor(color);
 		java.awt.Polygon p = new java.awt.Polygon();

@@ -1,3 +1,4 @@
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class Main {
 	private File file;
 	private ArrayList<Polygon> polygons;
 	boolean dataLoaded = false;
+	private ModelObject model;
 	public Main() {
 		gui = new GUI(this);
 	}
@@ -69,10 +71,45 @@ public class Main {
 				polygons.add(new Polygon(lightVector, v1, v2, v3, red, green,
 						blue));
 			}
+			model = new ModelObject(polygons);
+			model.centre(800, 800);
 
 		}
 
 	}
+	
+	private int prevMouseX;
+	private int prevMouseY;
+	private int mouseX;
+	private int mouseY;
+
+	public void mousePressed(MouseEvent e) {
+		prevMouseX = e.getX();
+		prevMouseY = e.getY();
+		mouseX = e.getX();
+		mouseY = e.getY();
+	}
+
+	public void mouseReleased(MouseEvent e) {
+		prevMouseX = e.getX();
+		prevMouseY = e.getY();
+		mouseX = e.getX();
+		mouseY = e.getY();
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		mouseX = e.getX();
+		mouseY = e.getY();
+		float diffX = prevMouseX - mouseX;
+		float diffY = prevMouseY - mouseY;
+		if(model != null){
+			model.rotateX(diffY/10);
+			model.rotateY(diffX/10);
+		}
+		prevMouseX = e.getX();
+		prevMouseY = e.getY();
+	}
+
 
 
 	public ArrayList<Polygon> getPolygons() {

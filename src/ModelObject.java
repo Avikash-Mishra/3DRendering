@@ -3,13 +3,14 @@ import java.util.ArrayList;
 
 public class ModelObject {
 	private ArrayList<Polygon> polygons;
-
+	private Vector3D lightSource;
 	/**
 	 * @param polygons
 	 */
-	public ModelObject(ArrayList<Polygon> polygons) {
+	public ModelObject(ArrayList<Polygon> polygons,Vector3D light) {
 		super();
 		this.polygons = polygons;
+		this.lightSource = light;
 	}
 
 	/**
@@ -84,10 +85,28 @@ public class ModelObject {
 		}
 		float imageCentreX = (minX + maxX)/2;
 		float imageCentreY = (minY + maxY)/2;
-		
+		float diffX = maxX - minX;
+		float diffY = maxY - minY;
+		if(diffX > width || diffY > height){
+			float scale = Math.min(height/diffY,width/diffX);
+			for(Polygon p : polygons){
+				for(Vector3D v : p.getVectors()){
+					v.x *= scale;
+					v.y *= scale;
+					v.z *= scale;
+				}
+			}
+			lightSource.x *= scale;
+			lightSource.y *= scale;
+			lightSource.z *= scale;
+			centre(width,height);
+			return;
+		}
 		float amountMoveX = screenCentreWidth - imageCentreX;
 		float amountMoveY = screenCentreHeight - imageCentreY;
 		this.translate(amountMoveX, amountMoveY, 0f);
+		lightSource.x += amountMoveX;
+		lightSource.y += amountMoveY;
 		
 		
 			

@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,9 +14,76 @@ public class Main {
 	private ArrayList<Polygon> polygons;
 	boolean dataLoaded = false;
 	private ModelObject model;
+	private LightSource ambient;
+	private LightSource intensity;
+	
+
+	private static BufferedImage image;
 	public Main() {
 		gui = new GUI(this);
+		ambient = new LightSource(0.5f, 0.5f, 0.5f);
+		intensity = new LightSource(0.5f, 0.5f, 0.5f);
 	}
+	
+	
+	public static BufferedImage convertToImage(Color[][] bitmap) {
+		image = new BufferedImage(GUI.FrameWidth, GUI.FrameHeight,
+				BufferedImage.TYPE_INT_RGB);
+		for (int x = 0; x < GUI.FrameWidth; x++) {
+			for (int y = 0; y < GUI.FrameHeight; y++) {
+				image.setRGB(x, y, bitmap[x][y].getRGB());
+			}
+		}
+		return image;
+	}
+	/**
+	 * @return the gui
+	 */
+	public GUI getGui() {
+		return gui;
+	}
+
+
+	/**
+	 * @param gui the gui to set
+	 */
+	public void setGui(GUI gui) {
+		this.gui = gui;
+	}
+
+
+	/**
+	 * @return the file
+	 */
+	public File getFile() {
+		return file;
+	}
+
+
+	/**
+	 * @param file the file to set
+	 */
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+
+	/**
+	 * @return the model
+	 */
+	public ModelObject getModel() {
+		return model;
+	}
+
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(ModelObject model) {
+		this.model = model;
+	}
+
+
 	public void loadData() {
 		JFileChooser openFile = new JFileChooser();
 		openFile.showOpenDialog(null);
@@ -30,6 +99,8 @@ public class Main {
 			dataLoaded = true;
 		}
 	}
+	
+	
 	
 	private void readData(File file) {
 		this.polygons = new ArrayList<Polygon>();
@@ -118,5 +189,35 @@ public class Main {
 
 	public static void main(String[] args) {
 		new Main();
+	}
+	/**
+	 * @return the ambient
+	 */
+	public LightSource getAmbient() {
+		return ambient;
+	}
+
+
+	/**
+	 * @param ambient the ambient to set
+	 */
+	public void setAmbient(LightSource ambient) {
+		this.ambient = ambient;
+	}
+
+
+	/**
+	 * @return the intensity
+	 */
+	public LightSource getIntensity() {
+		return intensity;
+	}
+
+
+	/**
+	 * @param intensity the intensity to set
+	 */
+	public void setIntensity(LightSource intensity) {
+		this.intensity = intensity;
 	}
 }

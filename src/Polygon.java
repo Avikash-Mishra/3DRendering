@@ -14,8 +14,11 @@ public class Polygon {
 	private int Green;
 	private int Blue;
 	private Color color;
+	private Color reflectivity;
 	private Transform transform;
 	private List<EdgeOfPolygon> polygonEdges;
+	boolean ifFacingScreen = false;
+	private Vector3D normalVector;
 	/**
 	 * @param vector3d1
 	 * @param vector3d2
@@ -40,10 +43,33 @@ public class Polygon {
 		polygonEdges.add(new EdgeOfPolygon(vector3d1,vector3d2));
 		polygonEdges.add(new EdgeOfPolygon(vector3d2,vector3d3));
 		polygonEdges.add(new EdgeOfPolygon(vector3d3,vector3d1));
+		calculateNormal();
 		
 		
 		
 	}
+	
+	public void shading(LightSource ambient, LightSource intensity){
+		float cost = convertUnitVector(normalVector).dotProduct(convertUnitVector(vectorLight));
+		
+		int newRed = (int)((ambient.getRed() + intensity.getRed() * cost) * this.Red); 
+		
+	}
+	
+	private Vector3D convertUnitVector(Vector3D v){
+		float length = (float) Math.sqrt(Math.pow(v.x, 2)+Math.pow(v.y, 2)+Math.pow(v.z, 2));
+		return new Vector3D(v.x/length, v.y/length, v.z/length);
+	}
+	
+	public void calculateNormal() {
+		normalVector = ((vector3DB.minus(vector3DA)).crossProduct(vector3DC
+				.minus(vector3DB))).unitVector();
+		if (normalVector.z > 0)
+			ifFacingScreen = false;
+		else
+			ifFacingScreen = true;
+	}
+	
 	
 	public double[][] getEdgeList(){
 		//Inialise min and max and thier extreme values
@@ -126,10 +152,6 @@ public class Polygon {
 		return new Vector3D(x, y, z);
 	}
 	
-	public Vector3D convertUnitVector(Vector3D v){
-		float vectorLength = (float) Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2)+Math.pow(v.z, 2));
-		return new Vector3D(v.x/vectorLength,v.y/vectorLength,v.z/vectorLength);
-	}
 
 	public void rotateY(float radians){
 		transform = Transform.newYRotation(radians);

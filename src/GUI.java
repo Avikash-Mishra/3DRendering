@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -21,16 +22,18 @@ public class GUI {
 	private JFrame WindowFrame;
 	private JComponent drawing;
 	private JPanel TopPanel;
-	private int FrameWidth = 800;
-	private int FrameHeight = 800;
+	static int FrameWidth = 800;
+	static int FrameHeight = 800;
 	private Graphics g;
 	private Main main;
+
 
 	public GUI(Main m) {
 		this.main = m;
 		setupFrame();
 
 	}
+	
 
 	private void setupFrame() {
 		JButton quitButton = new JButton("Quit");
@@ -104,9 +107,7 @@ public class GUI {
 	public void draw(Graphics g) {
 		this.g = g;
 		if (main.dataLoaded) {
-			for (Polygon p : main.getPolygons()) {
-				p.draw(g);
-			}
+			main.getModel().draw(g);
 			
 		}
 		drawing.repaint();

@@ -1,9 +1,11 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class ModelObject {
 	private ArrayList<Polygon> polygons;
 	private Vector3D lightSource;
+	private Color[][] colors;
 	/**
 	 * @param polygons
 	 */
@@ -29,8 +31,35 @@ public class ModelObject {
 	}
 
 	public void draw(Graphics g) {
-		for (Polygon p : polygons) {
+		resetColors();
+		calculateNormal();
+		for(Polygon p : polygons){
+			if(p.ifFacingScreen){
+				
+			}
+		}
+		
+		
+		
+		
+		
+		/*for (Polygon p : polygons) {
 			p.draw(g);
+		}*/
+	}
+	
+	private void resetColors(){
+		this.colors = new Color[GUI.FrameWidth][GUI.FrameHeight];
+		float[][] depth = new float[GUI.FrameWidth][GUI.FrameHeight];
+		for(int i = 0; i < depth.length; i++){
+			for(int j = 0; j < depth[i].length; j++){
+				depth[i][i] = Float.MAX_VALUE;
+			}
+		}
+	}
+	private void calculateNormal(){
+		for(Polygon p : polygons){
+			p.calculateNormal();
 		}
 	}
 

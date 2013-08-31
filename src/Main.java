@@ -142,7 +142,7 @@ public class Main {
 				polygons.add(new Polygon(lightVector, v1, v2, v3, red, green,
 						blue));
 			}
-			model = new ModelObject(polygons,lightVector);
+			model = new ModelObject(polygons,lightVector,this.ambient,this.intensity);
 			model.centre(800, 800);
 
 		}

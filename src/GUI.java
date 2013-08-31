@@ -18,8 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class GUI {
-	private JFrame WindowFrame;
+public class GUI extends JFrame {
 	private JComponent drawing;
 	private JPanel TopPanel;
 	static int FrameWidth = 800;
@@ -38,10 +37,9 @@ public class GUI {
 	private void setupFrame() {
 		JButton quitButton = new JButton("Quit");
 		JButton loadButton = new JButton("Load");
-		WindowFrame = new JFrame("3D Rendering");
-		WindowFrame.setSize(FrameWidth, FrameHeight);
-		WindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		WindowFrame.setResizable(true);
+		this.setSize(FrameWidth, FrameHeight);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(true);
 		drawing = new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -98,10 +96,10 @@ public class GUI {
 			}
 		});
 		drawing.setSize(FrameWidth, FrameHeight);
-		WindowFrame.add(drawing);
-		WindowFrame.add(TopPanel, BorderLayout.NORTH);
+		this.add(drawing);
+		this.add(TopPanel, BorderLayout.NORTH);
 
-		WindowFrame.setVisible(true);
+		this.setVisible(true);
 	}
 
 	public void draw(Graphics g) {

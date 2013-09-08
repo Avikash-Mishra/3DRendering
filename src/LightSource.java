@@ -31,6 +31,12 @@ public class LightSource {
 		}
 	}
 	
+	public void set(float f){
+		this.red = f;
+		this.green = f;
+		this.blue = f;
+	}
+	
 	public void decrease(){
 		float r = red - 0.1f;
 		float g = green - 0.1f;

@@ -48,7 +48,7 @@ public class Polygon {
 
 	}
 
-	public void shading(LightSource ambient, LightSource intensity) {
+	public Color shading(LightSource ambient, LightSource intensity) {
 		float cost = convertUnitVector(normalVector).dotProduct(
 				convertUnitVector(vectorLight));
 
@@ -74,7 +74,7 @@ public class Polygon {
 			newBlue = 255;
 		}
 		
-		this.color = new Color(newRed,newGreen,newBlue);
+		return new Color(newRed,newGreen,newBlue);
 
 	}
 
@@ -85,8 +85,9 @@ public class Polygon {
 	}
 
 	public void calculateNormal() {
-		normalVector = ((vector3DB.minus(vector3DA)).crossProduct(vector3DC
-				.minus(vector3DB))).unitVector();
+		//normalVector = ((vector3DB.minus(vector3DA)).crossProduct(vector3DC
+				//.minus(vector3DB))).unitVector();
+		normalVector = (vector3DB.minus(vector3DA)).unitVector().crossProduct((vector3DC.minus(vector3DB)).unitVector());
 		if (normalVector.z > 0)
 			ifFacingScreen = false;
 		else
@@ -106,7 +107,7 @@ public class Polygon {
 	}
 	public EdgeList[] edgeList() {
 		bounds();
-		EdgeList[] e = new EdgeList[(int) (bounds.getHeight() + 1)];
+		EdgeList[] e = new EdgeList[(int) (bounds.getHeight() + 10)];
 		Vector3D[] vectorArray = new Vector3D[3];
 		vectorArray[0] = this.vector3DA;
 		vectorArray[1] = this.vector3DB;
@@ -119,21 +120,21 @@ public class Polygon {
 				vectorA = vectorArray[(i+1)%3];
 			}
 			float mx = (vectorB.x - vectorA.x)/(vectorB.y - vectorA.y);
-			float mz = (vectorB.z - vectorA.z)/(vectorB.z - vectorA.z);
+			float mz = (vectorB.z - vectorA.z)/(vectorB.y - vectorA.y);
 			float x = vectorA.x;
 			float z = vectorA.z;
 
-			int diffY = Math.round(vectorA.y)- Math.round(bounds.getY());
-			int maxj = Math.round(vectorB.y) - Math.round(bounds.getY());
+			int index = Math.round(vectorA.y)- Math.round(bounds.getY());
+			int maxIndex = Math.round(vectorB.y) - Math.round(bounds.getY());
 
-			while(diffY < maxj){
-				if(e[diffY] == null){
-					e[diffY] = new EdgeList(x, z);
+			while(index < maxIndex){
+				if(e[index] == null){
+					e[index] = new EdgeList(x, z);
 				} else{
-					e[diffY].add(x, z);
+					e[index].add(x, z);
 
 				}
-				diffY++;
+				index++;
 				x += mx;
 				z += mz;
 			}
@@ -229,6 +230,7 @@ public class Polygon {
 		vector3DA = transform.multiply(vector3DA);
 		vector3DB = transform.multiply(vector3DB);
 		vector3DC = transform.multiply(vector3DC);
+		vectorLight = transform.multiply(vectorLight);
 		//rotateZ(radians);
 
 	}
@@ -238,6 +240,7 @@ public class Polygon {
 		vector3DA = transform.multiply(vector3DA);
 		vector3DB = transform.multiply(vector3DB);
 		vector3DC = transform.multiply(vector3DC);
+		vectorLight = transform.multiply(vectorLight);
 		//rotateZ(radians);
 
 	}
@@ -247,6 +250,7 @@ public class Polygon {
 		vector3DA = transform.multiply(vector3DA);
 		vector3DB = transform.multiply(vector3DB);
 		vector3DC = transform.multiply(vector3DC);
+		vectorLight = transform.multiply(vectorLight);
 
 	}
 

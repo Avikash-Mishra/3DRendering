@@ -1,22 +1,19 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class GUI extends JFrame {
 	private JComponent drawing;
@@ -25,6 +22,11 @@ public class GUI extends JFrame {
 	static int FrameHeight = 800;
 	private Graphics g;
 	private Main main;
+	private JButton quitButton;
+	private JButton loadButton;
+	private JButton saveButton;
+	private JSlider ambientScroll;
+	private JSlider intesityScroll;
 
 
 	public GUI(Main m) {
@@ -33,10 +35,25 @@ public class GUI extends JFrame {
 
 	}
 	
-
+	public void changeAmb(){
+		float value = (float) ambientScroll.getValue()/10;
+		Main.ambient.set(value);
+	}
+	
+	public void changeIntensity(){
+		float value = (float) intesityScroll.getValue()/10;
+		Main.intensity.set(value);
+	}
+	
 	private void setupFrame() {
-		JButton quitButton = new JButton("Quit");
-		JButton loadButton = new JButton("Load");
+		quitButton = new JButton("Quit");
+		loadButton = new JButton("Load");
+		saveButton = new JButton("Save");
+		ambientScroll = new JSlider(1, 10, 5);
+		JLabel ambientLabel = new JLabel("Ambient");
+		JLabel intensityLabel = new JLabel("Intensity");
+		intesityScroll = new JSlider(1, 10, 5);
+		
 		this.setSize(FrameWidth, FrameHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(true);
@@ -46,15 +63,47 @@ public class GUI extends JFrame {
 				draw(g);
 			}
 		};
+		ambientScroll.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				changeAmb();
+				
+			}
+		});
+		
+		intesityScroll.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				changeIntensity();
+				
+			}
+		});
 		TopPanel = new JPanel();
 		TopPanel.add(quitButton);
+		TopPanel.add(loadButton);
+		TopPanel.add(saveButton);
+		TopPanel.add(ambientLabel);
+		TopPanel.add(ambientScroll);
+		TopPanel.add(intensityLabel);
+		TopPanel.add(intesityScroll);
+		
+		saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				main.save();
+				
+			}
+		});
+		
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(1);
 			}
 		});
-		TopPanel.add(loadButton);
 		loadButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -63,6 +112,7 @@ public class GUI extends JFrame {
 
 			}
 		});
+		
 		
 		drawing.addMouseListener(new MouseListener() {
 			

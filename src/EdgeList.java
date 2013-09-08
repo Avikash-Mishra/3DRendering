@@ -20,7 +20,7 @@ public class EdgeList {
 			coordinates[3] = coordinates[1];
 			coordinates[0] = x;
 			coordinates[1] = z;			
-		} else{	
+		} else if(x > coordinates[2]){	
 			coordinates[2] = x;
 			coordinates[3] = z;
 

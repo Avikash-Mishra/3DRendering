@@ -3,9 +3,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 
 public class Main {
@@ -14,28 +16,31 @@ public class Main {
 	private ArrayList<Polygon> polygons;
 	boolean dataLoaded = false;
 	private ModelObject model;
-	private LightSource ambient;
-	private LightSource intensity;
-	
+	public static LightSource ambient;
+	public static LightSource intensity;
+	public static BufferedImage image = null;
 
-	private static BufferedImage image;
 	public Main() {
 		gui = new GUI(this);
 		ambient = new LightSource(0.5f, 0.5f, 0.5f);
 		intensity = new LightSource(0.5f, 0.5f, 0.5f);
 	}
-	
-	
+
 	public static BufferedImage convertToImage(Color[][] bitmap) {
 		image = new BufferedImage(GUI.FrameWidth, GUI.FrameHeight,
 				BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < GUI.FrameWidth; x++) {
 			for (int y = 0; y < GUI.FrameHeight; y++) {
-				image.setRGB(x, y, bitmap[x][y].getRGB());
+				if (bitmap[x][y] != null) {
+					image.setRGB(x, y, bitmap[x][y].getRGB());
+				} else {
+					image.setRGB(x, y, 12500670);
+				}
 			}
 		}
 		return image;
 	}
+
 	/**
 	 * @return the gui
 	 */
@@ -43,14 +48,13 @@ public class Main {
 		return gui;
 	}
 
-
 	/**
-	 * @param gui the gui to set
+	 * @param gui
+	 *            the gui to set
 	 */
 	public void setGui(GUI gui) {
 		this.gui = gui;
 	}
-
 
 	/**
 	 * @return the file
@@ -59,14 +63,13 @@ public class Main {
 		return file;
 	}
 
-
 	/**
-	 * @param file the file to set
+	 * @param file
+	 *            the file to set
 	 */
 	public void setFile(File file) {
 		this.file = file;
 	}
-
 
 	/**
 	 * @return the model
@@ -75,14 +78,13 @@ public class Main {
 		return model;
 	}
 
-
 	/**
-	 * @param model the model to set
+	 * @param model
+	 *            the model to set
 	 */
 	public void setModel(ModelObject model) {
 		this.model = model;
 	}
-
 
 	public void loadData() {
 		JFileChooser openFile = new JFileChooser();
@@ -99,9 +101,7 @@ public class Main {
 			dataLoaded = true;
 		}
 	}
-	
-	
-	
+
 	private void readData(File file) {
 		this.polygons = new ArrayList<Polygon>();
 		Scanner scan = null;
@@ -142,13 +142,13 @@ public class Main {
 				polygons.add(new Polygon(lightVector, v1, v2, v3, red, green,
 						blue));
 			}
-			model = new ModelObject(polygons,lightVector,this.ambient,this.intensity);
+			model = new ModelObject(polygons, lightVector);
 			model.centre(800, 800);
 
 		}
 
 	}
-	
+
 	private int prevMouseX;
 	private int prevMouseY;
 	private int mouseX;
@@ -173,15 +173,13 @@ public class Main {
 		mouseY = e.getY();
 		float diffX = prevMouseX - mouseX;
 		float diffY = prevMouseY - mouseY;
-		if(model != null){
-			model.rotateX(diffY/10);
-			model.rotateY(diffX/10);
+		if (model != null) {
+			model.rotateX(diffY / 10);
+			model.rotateY(diffX / 10);
 		}
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
 	}
-
-
 
 	public ArrayList<Polygon> getPolygons() {
 		return this.polygons;
@@ -190,6 +188,7 @@ public class Main {
 	public static void main(String[] args) {
 		new Main();
 	}
+
 	/**
 	 * @return the ambient
 	 */
@@ -197,14 +196,13 @@ public class Main {
 		return ambient;
 	}
 
-
 	/**
-	 * @param ambient the ambient to set
+	 * @param ambient
+	 *            the ambient to set
 	 */
 	public void setAmbient(LightSource ambient) {
-		this.ambient = ambient;
+		Main.ambient = ambient;
 	}
-
 
 	/**
 	 * @return the intensity
@@ -213,11 +211,24 @@ public class Main {
 		return intensity;
 	}
 
-
 	/**
-	 * @param intensity the intensity to set
+	 * @param intensity
+	 *            the intensity to set
 	 */
 	public void setIntensity(LightSource intensity) {
-		this.intensity = intensity;
+		Main.intensity = intensity;
+	}
+
+	public void save() {
+		if (Main.image != null) {
+			File outputfile = new File("image.png");
+			try {
+				ImageIO.write(Main.image, "png", outputfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 }

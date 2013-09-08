@@ -1,26 +1,22 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ModelObject {
 	private ArrayList<Polygon> polygons;
 	private Vector3D lightSource;
-	private LightSource ambient;
-	private LightSource intensity;
 	private float[][] zBuffer;
-
 	private Color[][] colors;
 
 	/**
 	 * @param polygons
 	 */
-	public ModelObject(ArrayList<Polygon> polygons, Vector3D light,
-			LightSource amb, LightSource inten) {
+	public ModelObject(ArrayList<Polygon> polygons, Vector3D light) {
 		super();
 		this.polygons = polygons;
 		this.lightSource = light;
-		this.ambient = amb;
-		this.intensity = inten;
 	}
 
 	/**
@@ -43,7 +39,6 @@ public class ModelObject {
 		calculateNormal();
 		for (Polygon p : polygons) {
 			if (p.ifFacingScreen) {
-				p.shading(ambient, intensity);
 				EdgeList[] edgelist = p.edgeList();
 
 				int miny = p.getMinY();
@@ -51,18 +46,18 @@ public class ModelObject {
 				for (int i = 0; i < edgelist.length && edgelist[i] != null; i++) {
 					int cury = miny + i;
 					int x = Math.round(edgelist[i].getLeftX());
-					int z = Math.round(edgelist[i].getLeftZ());
+					float z = edgelist[i].getLeftZ();
 
 					int gradientz = Math
 							.round((edgelist[i].getRightZ() - edgelist[i]
-									.getRightZ())
+									.getLeftZ())
 									/ (edgelist[i].getRightX() - edgelist[i]
 											.getLeftX()));
 					while (x <= edgelist[i].getRightX()) {
 						if (x < GUI.FrameWidth && cury < GUI.FrameHeight) {
 							if (z < zBuffer[x][cury]) {
 								zBuffer[x][cury] = z;
-								colors[x][cury] = c;
+								colors[x][cury] = p.shading(Main.ambient, Main.intensity);
 							}
 						}
 						x++;
@@ -72,16 +67,20 @@ public class ModelObject {
 				}
 			}
 		}
-
-		for (int i = 0; i < colors.length; i++) {
-			for (int j = 0; j < colors[i].length; j++) {
-				if (colors[i][j] != null) {
-					g.setColor(colors[i][j]);
-					g.fillRect(i, j, 1, 1);
-				}
-			}
-		}
-
+		
+		Main.image = Main.convertToImage(colors);
+		
+//		for (int i = 0; i < colors.length; i++) {
+//			for (int j = 0; j < colors[i].length; j++) {
+//				if (colors[i][j] != null) {
+//					g.setColor(colors[i][j]);
+//					g.fillRect(i, j, 1, 1);
+//				}
+//			}
+//		}
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(Main.image, null, 0,0);
+		
 		/*
 		 * for (Polygon p : polygons) { p.draw(g); }
 		 */
@@ -103,49 +102,12 @@ public class ModelObject {
 		}
 	}
 
-	// public BufferedImage draw(){
-	// Iterator<Polygon> poly = polygon.iterator();
-	//
-	// while (poly.hasNext()) {
-	// Polygon p = poly.next();
-	// //only draws the polygons that are facing the user
-	// if (p.getDraw()) {
-	// EdgeList[] edgelist = p.getEdgeList();
-	// int minY = p.getMinY();
-	// Color c = p.shading(lightSource, ambientLight);//compute the shading
-	//
-	// for (int i = 0; i < edgelist.length-1 && edgelist[i]!=null ; i++) {
-	// int y = minY+i;//go down each row
-	// //System.out.println(y);
-	// //System.out.println(edgelist[i].getLeftX());
-	// int x = Math.round(edgelist[i].getLeftX());
-	// int z = Math.round(edgelist[i].getLeftZ());
-	//
-	// int mz = Math.round((edgelist[i].getRightZ() - edgelist[i].getLeftZ())
-	// / (edgelist[i].getRightX() - edgelist[i].getLeftX()));
-	//
-	// while (x <= Math.round(edgelist[i].getRightX())) {
-	// //System.out.println("left x: "+ x
-	// +"right x :"+Math.round(edgelist[i].getRightX()));
-	// if (z < zBuffer[x][y]) {
-	// zBuffer[x][y] = z;
-	// screen[x][y] = c;
-	// }
-	// x++;
-	// z += mz;
-	// }
-	// }
-	// }
-	// }
-	// return convertToImage(screen);
-	// }
-
 	public void rotateY(float radian) {
 		for (Polygon p : polygons) {
 			p.rotateY(radian);
 
 		}
-		centre(800f, 800f);
+		centre(GUI.FrameWidth, GUI.FrameHeight);
 
 	}
 
@@ -154,7 +116,7 @@ public class ModelObject {
 			p.rotateZ(radian);
 
 		}
-		centre(800f, 800f);
+		centre(GUI.FrameWidth, GUI.FrameHeight);
 	}
 
 	public void rotateX(float radian) {
@@ -162,7 +124,7 @@ public class ModelObject {
 			p.rotateX(radian);
 
 		}
-		centre(800f, 800f);
+		centre(GUI.FrameWidth, GUI.FrameHeight);
 	}
 
 	public void translate(float x, float y, float z) {
